@@ -1,8 +1,9 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
 import numpy as np
@@ -33,9 +34,47 @@ PREZIMENA = [
 
 TERMINI = ["2025-01", "2025-02", "2025-06", "2025-09"]
 CSV_PUTANJA = "studenti_ispit.csv"
+BROJ_STUDENATA = 50
+
+# Konfiguracija distribucije bodova
+DISTRIBUCIJA_BODOVA = [
+    (0.15, 25, 10, 0, 49),    # 15% pao (mean=25, std=10, min=0, max=49)
+    (0.30, 55, 8, 50, 64),    # 15% dovoljan (mean=55, std=8, min=50, max=64)
+    (0.55, 70, 6, 65, 79),    # 25% dobar (mean=70, std=6, min=65, max=79)
+    (0.80, 85, 5, 80, 89),    # 25% vrlo dobar (mean=85, std=5, min=80, max=89)
+    (1.00, 93, 4, 90, 100),   # 20% odličan (mean=93, std=4, min=90, max=100)
+]
+
+
+def kreiraj_figuru(figsize: tuple[int, int] = (8, 5),
+                   postavi_ax_pozadinu: bool = True) -> tuple[Figure, plt.Axes]:
+    """Kreira matplotlib figuru s unaprijed definiranim stilom.
+
+    Args:
+        figsize: Dimenzije figure (širina, visina).
+        postavi_ax_pozadinu: Ako je True, postavlja pozadinu osi.
+
+    Returns:
+        Tuple (figura, osi) s primijenjenim stilovima.
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+    fig.patch.set_facecolor(POZADINA_GRAF)
+    if postavi_ax_pozadinu:
+        ax.set_facecolor(POZADINA_GRAF)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    return fig, ax
 
 
 def bodovi_u_ocjenu(bodovi: int) -> int:
+    """Pretvara bodove u ocjenu prema hrvatskom sustavu ocjenjivanja.
+
+    Args:
+        bodovi: Broj bodova (0-100).
+
+    Returns:
+        Ocjena od 1 do 5.
+    """
     if bodovi >= 90:
         return 5
     elif bodovi >= 80:
