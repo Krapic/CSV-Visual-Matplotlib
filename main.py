@@ -444,17 +444,27 @@ class Aplikacija(tk.Tk):
         self.okvir_graf = tk.Frame(desni_panel, bg="#ffffff", relief="solid", bd=1)
         self.okvir_graf.grid(row=0, column=0, sticky="nsew")
 
-    def _generiraj_nove_podatke(self):
-        """Generira nove nasumične podatke i sprema u CSV."""
-        self.df = generiraj_csv(CSV_PUTANJA, broj_studenata=50)
-        self.osvjezi_statistiku()
+    def _generiraj_nove_podatke(self) -> bool:
+        """Generira nove nasumične podatke i sprema u CSV.
+
+        Returns:
+            True ako je generiranje uspjelo, False inače.
+        """
+        try:
+            self.df = generiraj_csv(CSV_PUTANJA, broj_studenata=BROJ_STUDENATA)
+            self.osvjezi_statistiku()
+            return True
+        except (IOError, ValueError, RuntimeError) as e:
+            messagebox.showerror("Greška", f"Greška pri generiranju podataka:\n{e}")
+            return False
 
     def _generiraj_i_prikazi(self):
         """Generira nove podatke i prikazuje odabrani graf."""
-        self._generiraj_nove_podatke()
-        self._prikazi_graf()
+        if self._generiraj_nove_podatke():
+            self._prikazi_graf()
 
     def osvjezi_statistiku(self):
+        """Osvježava prikaz statistike u text widgetu na temelju trenutnih podataka."""
         self.text_statistika.config(state=tk.NORMAL)
         self.text_statistika.delete(1.0, tk.END)
 
@@ -503,6 +513,7 @@ class Aplikacija(tk.Tk):
         self.text_statistika.config(state=tk.DISABLED)
 
     def _prikazi_graf(self):
+        """Prikazuje odabrani graf u canvas widgetu."""
         if self.df is None:
             return
 
