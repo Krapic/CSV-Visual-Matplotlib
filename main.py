@@ -88,12 +88,33 @@ def bodovi_u_ocjenu(bodovi: int) -> int:
 
 
 def generiraj_csv(putanja: str, broj_studenata: int = 50) -> pd.DataFrame:
-    """Generira CSV s nasumičnim podacima studenata."""
+    """Generira CSV s nasumičnim podacima studenata.
+
+    Args:
+        putanja: Putanja do CSV datoteke za spremanje.
+        broj_studenata: Broj studenata za generiranje (max 1612 zbog jedinstvenih imena).
+
+    Returns:
+        DataFrame s generiranim podacima studenata.
+
+    Raises:
+        ValueError: Ako je broj_studenata veći od mogućih jedinstvenih kombinacija.
+    """
+    sva_imena = MUSKA_IMENA + ZENSKA_IMENA
+    max_kombinacija = len(sva_imena) * len(PREZIMENA)
+
+    if broj_studenata > max_kombinacija:
+        raise ValueError(
+            f"Broj studenata ({broj_studenata}) premašuje maksimalan broj "
+            f"jedinstvenih kombinacija imena ({max_kombinacija})."
+        )
+
     podaci = []
     koristena_imena = set()
 
     for i in range(1, broj_studenata + 1):
-        while True:
+        max_pokusaja = 1000
+        for _ in range(max_pokusaja):
             if random.random() < 0.5:
                 ime = random.choice(MUSKA_IMENA)
             else:
@@ -103,21 +124,17 @@ def generiraj_csv(putanja: str, broj_studenata: int = 50) -> pd.DataFrame:
             if puno_ime not in koristena_imena:
                 koristena_imena.add(puno_ime)
                 break
+        else:
+            raise RuntimeError(f"Nije moguće generirati jedinstveno ime nakon {max_pokusaja} pokušaja.")
 
         termin = random.choice(TERMINI)
 
         # Realistična distribucija bodova
         tip = random.random()
-        if tip < 0.15:
-            bodovi = int(np.clip(np.random.normal(25, 10), 0, 49))
-        elif tip < 0.30:
-            bodovi = int(np.clip(np.random.normal(55, 8), 50, 64))
-        elif tip < 0.55:
-            bodovi = int(np.clip(np.random.normal(70, 6), 65, 79))
-        elif tip < 0.80:
-            bodovi = int(np.clip(np.random.normal(85, 5), 80, 89))
-        else:
-            bodovi = int(np.clip(np.random.normal(93, 4), 90, 100))
+        for granica, mean, std, min_bod, max_bod in DISTRIBUCIJA_BODOVA:
+            if tip < granica:
+                bodovi = int(np.clip(np.random.normal(mean, std), min_bod, max_bod))
+                break
 
         ocjena = bodovi_u_ocjenu(bodovi)
 
@@ -131,18 +148,20 @@ def generiraj_csv(putanja: str, broj_studenata: int = 50) -> pd.DataFrame:
         })
 
     df = pd.DataFrame(podaci)
-    df.to_csv(putanja, index=False)
+    try:
+        df.to_csv(putanja, index=False)
+    except (IOError, OSError) as e:
+        raise IOError(f"Nije moguće spremiti CSV datoteku na '{putanja}': {e}") from e
     return df
 
 
-def fig_broj_studenata_po_ocjeni(df: pd.DataFrame):
+def fig_broj_studenata_po_ocjeni(df: pd.DataFrame) -> Figure:
+    """Generira stupčasti graf broja studenata po ocjeni."""
     ocjene_counts = df["ocjena"].value_counts().sort_index()
     sve_ocjene = [1, 2, 3, 4, 5]
     vrijednosti = [ocjene_counts.get(o, 0) for o in sve_ocjene]
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    fig.patch.set_facecolor(POZADINA_GRAF)
-    ax.set_facecolor(POZADINA_GRAF)
+    fig, ax = kreiraj_figuru()
 
     bars = ax.bar([str(o) for o in sve_ocjene], vrijednosti, color=BOJE_GRAFOVA[:5],
                   edgecolor="white", linewidth=1.5)
