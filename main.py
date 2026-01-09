@@ -150,8 +150,6 @@ def fig_broj_studenata_po_ocjeni(df: pd.DataFrame):
     ax.set_title("Broj studenata po ocjeni", fontsize=14, fontweight="bold", pad=15)
     ax.set_xlabel("Ocjena", fontsize=11)
     ax.set_ylabel("Broj studenata", fontsize=11)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
     ax.set_ylim(bottom=0)
     ax.margins(x=0)
 
@@ -190,10 +188,9 @@ def fig_udjel_ocjena(df: pd.DataFrame):
     return fig
 
 
-def fig_histogram_bodova(df: pd.DataFrame):
-    fig, ax = plt.subplots(figsize=(8, 5))
-    fig.patch.set_facecolor(POZADINA_GRAF)
-    ax.set_facecolor(POZADINA_GRAF)
+def fig_histogram_bodova(df: pd.DataFrame) -> Figure:
+    """Generira histogram raspodjele bodova."""
+    fig, ax = kreiraj_figuru()
 
     # Fiksni raspon 0-100 s 10 binova
     n, bins, patches = ax.hist(df["bodovi"], bins=10, range=(0, 100), edgecolor="white", linewidth=1.2)
@@ -218,8 +215,6 @@ def fig_histogram_bodova(df: pd.DataFrame):
     ax.set_title("Raspodjela bodova", fontsize=14, fontweight="bold", pad=15)
     ax.set_xlabel("Broj bodova", fontsize=11)
     ax.set_ylabel("Broj studenata", fontsize=11)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
     ax.set_xlim(0, 100)
     ax.set_ylim(bottom=0)
     ax.legend(loc="upper right", fontsize=9)
@@ -244,8 +239,6 @@ def fig_prosjek_bodova_po_terminu(df: pd.DataFrame):
     ax.set_title("Prosječan broj bodova po ispitnom terminu", fontsize=14, fontweight="bold", pad=15)
     ax.set_xlabel("Termin", fontsize=11)
     ax.set_ylabel("Prosječan broj bodova", fontsize=11)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
     ax.set_ylim(bottom=0)
     ax.margins(x=0)
 
@@ -283,8 +276,6 @@ def fig_prolaznost_po_terminu(df: pd.DataFrame):
     ax.set_xlabel("Termin", fontsize=11)
     ax.set_ylabel("Prolaznost (%)", fontsize=11)
     ax.set_ylim(0, 105)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
     ax.margins(x=0)
 
     for bar in bars:
@@ -319,8 +310,6 @@ def fig_boxplot_bodova_po_terminu(df: pd.DataFrame):
     ax.set_title("Distribucija bodova po terminu", fontsize=14, fontweight="bold", pad=15)
     ax.set_xlabel("Termin", fontsize=11)
     ax.set_ylabel("Bodovi", fontsize=11)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
     ax.set_ylim(0, 100)
     ax.margins(x=0)
     ax.legend(loc="lower right", fontsize=9)
