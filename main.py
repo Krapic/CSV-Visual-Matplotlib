@@ -345,6 +345,7 @@ class Aplikacija(tk.Tk):
 
         self.df: pd.DataFrame | None = None
         self.canvas: FigureCanvasTkAgg | None = None
+        self.trenutni_fig: Figure | None = None
         self.trenutni_graf = tk.StringVar()
 
         self._konfiguriraj_stilove()
@@ -411,7 +412,13 @@ class Aplikacija(tk.Tk):
             command=self._generiraj_i_prikazi,
             style="Accent.TButton"
         )
-        btn_prikazi.pack(fill=tk.X)
+        btn_prikazi.pack(fill=tk.X, pady=(0, 5))
+
+        btn_spremi = ttk.Button(
+            okvir_graf, text="Spremi graf kao sliku",
+            command=self._spremi_graf
+        )
+        btn_spremi.pack(fill=tk.X)
 
         okvir_statistika = ttk.LabelFrame(lijevi_panel, text="Osnovna statistika", padding=10)
         okvir_statistika.pack(fill=tk.BOTH, expand=True)
@@ -520,17 +527,46 @@ class Aplikacija(tk.Tk):
 
         if self.canvas is not None:
             self.canvas.get_tk_widget().destroy()
+            if self.trenutni_fig is not None:
+                plt.close(self.trenutni_fig)
             self.canvas = None
 
+        self.trenutni_fig = fig
         self.canvas = FigureCanvasTkAgg(fig, master=self.okvir_graf)
         self.canvas.draw()
         widget = self.canvas.get_tk_widget()
         widget.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
-        plt.close(fig)
+    def _spremi_graf(self):
+        """Sprema trenutni graf kao sliku (PNG, PDF, SVG ili JPEG)."""
+        if self.trenutni_fig is None:
+            messagebox.showwarning("Upozorenje", "Nema grafa za spremanje.")
+            return
+
+        putanja = filedialog.asksaveasfilename(
+            defaultextension=".png",
+            filetypes=[
+                ("PNG slika", "*.png"),
+                ("PDF dokument", "*.pdf"),
+                ("SVG slika", "*.svg"),
+                ("JPEG slika", "*.jpg"),
+            ],
+            title="Spremi graf kao..."
+        )
+
+        if not putanja:
+            return
+
+        try:
+            self.trenutni_fig.savefig(putanja, dpi=150, bbox_inches='tight',
+                                       facecolor=self.trenutni_fig.get_facecolor())
+            messagebox.showinfo("Uspjeh", f"Graf spremljen u:\n{putanja}")
+        except Exception as e:
+            messagebox.showerror("Greška", f"Greška pri spremanju grafa:\n{e}")
 
 
 def main():
+    """Pokreće GUI aplikaciju za vizualizaciju rezultata ispita."""
     app = Aplikacija()
     app.mainloop()
 
