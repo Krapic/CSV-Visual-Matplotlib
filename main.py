@@ -181,12 +181,12 @@ def fig_broj_studenata_po_ocjeni(df: pd.DataFrame) -> Figure:
     return fig
 
 
-def fig_udjel_ocjena(df: pd.DataFrame):
+def fig_udjel_ocjena(df: pd.DataFrame) -> Figure:
+    """Generira pie chart s udjelom ocjena."""
     ocjene_counts = df["ocjena"].value_counts().sort_index()
     labels = [f"Ocjena {int(o)}" for o in ocjene_counts.index]
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    fig.patch.set_facecolor(POZADINA_GRAF)
+    fig, ax = kreiraj_figuru(postavi_ax_pozadinu=False)
 
     wedges, texts, autotexts = ax.pie(
         ocjene_counts.values,
@@ -242,12 +242,11 @@ def fig_histogram_bodova(df: pd.DataFrame) -> Figure:
     return fig
 
 
-def fig_prosjek_bodova_po_terminu(df: pd.DataFrame):
+def fig_prosjek_bodova_po_terminu(df: pd.DataFrame) -> Figure:
+    """Generira linijski graf prosječnih bodova po ispitnom terminu."""
     prosjeci = df.groupby("termin")["bodovi"].mean().sort_index()
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    fig.patch.set_facecolor(POZADINA_GRAF)
-    ax.set_facecolor(POZADINA_GRAF)
+    fig, ax = kreiraj_figuru()
 
     ax.plot(prosjeci.index, prosjeci.values, marker="o", markersize=10,
             linewidth=2.5, color="#003893", markerfacecolor="#CE1126",
@@ -269,16 +268,15 @@ def fig_prosjek_bodova_po_terminu(df: pd.DataFrame):
     return fig
 
 
-def fig_prolaznost_po_terminu(df: pd.DataFrame):
-    def izracunaj_prolaznost(grupa):
+def fig_prolaznost_po_terminu(df: pd.DataFrame) -> Figure:
+    """Generira stupčasti graf prolaznosti po ispitnom terminu."""
+    def izracunaj_prolaznost(grupa: pd.DataFrame) -> float:
         prolaz = (grupa["ocjena"] >= 2).sum()
-        return (prolaz / len(grupa)) * 100 if len(grupa) > 0 else 0
+        return (prolaz / len(grupa)) * 100 if len(grupa) > 0 else 0.0
 
-    prolaznost = df.groupby("termin").apply(izracunaj_prolaznost).sort_index()
+    prolaznost = df.groupby("termin").apply(izracunaj_prolaznost, include_groups=False).sort_index()
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    fig.patch.set_facecolor(POZADINA_GRAF)
-    ax.set_facecolor(POZADINA_GRAF)
+    fig, ax = kreiraj_figuru()
 
     bars = ax.bar(prolaznost.index, prolaznost.values, color="#2ECC71",
                   edgecolor="white", linewidth=1.5)
@@ -306,13 +304,12 @@ def fig_prolaznost_po_terminu(df: pd.DataFrame):
     return fig
 
 
-def fig_boxplot_bodova_po_terminu(df: pd.DataFrame):
+def fig_boxplot_bodova_po_terminu(df: pd.DataFrame) -> Figure:
+    """Generira box plot distribucije bodova po ispitnom terminu."""
     termini = sorted(df["termin"].unique())
     podaci = [df[df["termin"] == t]["bodovi"].values for t in termini]
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    fig.patch.set_facecolor(POZADINA_GRAF)
-    ax.set_facecolor(POZADINA_GRAF)
+    fig, ax = kreiraj_figuru()
 
     bp = ax.boxplot(podaci, labels=termini, patch_artist=True)
 
