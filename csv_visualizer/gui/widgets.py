@@ -234,7 +234,7 @@ class StatsPanel(tk.Frame):
         self.text = tk.Text(
             self,
             wrap=tk.WORD,
-            font=("JetBrains Mono", 10),
+            font=(MONO_FONT, 10),
             bg=theme.stats_bg,
             fg=theme.stats_fg,
             relief="flat",
