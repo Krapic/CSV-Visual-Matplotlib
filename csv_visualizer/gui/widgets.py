@@ -697,3 +697,234 @@ class SearchBar(tk.Frame):
     def destroy(self):
         ThemeManager.remove_listener(self._on_theme_change)
         super().destroy()
+
+
+class StatusBar(tk.Frame):
+    """Status bar na dnu aplikacije."""
+
+    def __init__(self, master, **kwargs):
+        self._theme = ThemeManager.get_current()
+        super().__init__(master, bg=self._theme.bg_secondary, **kwargs)
+
+        self._create_widgets()
+        ThemeManager.add_listener(self._on_theme_change)
+
+    def _create_widgets(self):
+        theme = self._theme
+
+        # Separator na vrhu
+        self.separator = tk.Frame(self, height=1, bg=theme.border)
+        self.separator.pack(side=tk.TOP, fill=tk.X)
+
+        # Lijeva strana - status poruka
+        self.status_label = tk.Label(
+            self,
+            text="✓ Spreman",
+            font=("Segoe UI", 9),
+            bg=theme.bg_secondary,
+            fg=theme.fg_muted,
+            anchor="w"
+        )
+        self.status_label.pack(side=tk.LEFT, padx=10, pady=4)
+
+        # Desna strana - info
+        self.info_label = tk.Label(
+            self,
+            text="",
+            font=("Segoe UI", 9),
+            bg=theme.bg_secondary,
+            fg=theme.fg_muted,
+            anchor="e"
+        )
+        self.info_label.pack(side=tk.RIGHT, padx=10, pady=4)
+
+    def set_status(self, message: str, status_type: str = "info"):
+        """Postavlja status poruku."""
+        theme = self._theme
+
+        colors = {
+            "info": theme.fg_muted,
+            "success": theme.success,
+            "warning": theme.warning,
+            "error": theme.error,
+        }
+
+        icons = {
+            "info": "ℹ️",
+            "success": "✅",
+            "warning": "⚠️",
+            "error": "❌",
+        }
+
+        color = colors.get(status_type, theme.fg_muted)
+        icon = icons.get(status_type, "")
+
+        self.status_label.configure(
+            text=f"{icon} {message}" if icon else message,
+            fg=color
+        )
+
+    def set_info(self, text: str):
+        """Postavlja info tekst na desnoj strani."""
+        self.info_label.configure(text=text)
+
+    def _on_theme_change(self, theme: Theme):
+        self._theme = theme
+        self.configure(bg=theme.bg_secondary)
+        self.status_label.configure(bg=theme.bg_secondary)
+        self.info_label.configure(bg=theme.bg_secondary, fg=theme.fg_muted)
+        self.separator.configure(bg=theme.border)
+
+    def destroy(self):
+        ThemeManager.remove_listener(self._on_theme_change)
+        super().destroy()
+
+
+class LoadingIndicator(tk.Frame):
+    """Animirani loading indikator."""
+
+    FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+
+    def __init__(self, master, text: str = "Učitavanje...", **kwargs):
+        self._theme = ThemeManager.get_current()
+        super().__init__(master, bg=self._theme.bg_primary, **kwargs)
+
+        self._text = text
+        self._frame_index = 0
+        self._animation_id: str | None = None
+        self._running = False
+
+        self._create_widgets()
+        ThemeManager.add_listener(self._on_theme_change)
+
+    def _create_widgets(self):
+        theme = self._theme
+
+        self.spinner_label = tk.Label(
+            self,
+            text=self.FRAMES[0],
+            font=("Segoe UI", 16),
+            bg=theme.bg_primary,
+            fg=theme.accent
+        )
+        self.spinner_label.pack(side=tk.LEFT, padx=(0, 8))
+
+        self.text_label = tk.Label(
+            self,
+            text=self._text,
+            font=("Segoe UI", 11),
+            bg=theme.bg_primary,
+            fg=theme.fg_primary
+        )
+        self.text_label.pack(side=tk.LEFT)
+
+    def start(self):
+        """Pokreće animaciju."""
+        if self._running:
+            return
+        self._running = True
+        self._animate()
+
+    def stop(self):
+        """Zaustavlja animaciju."""
+        self._running = False
+        if self._animation_id:
+            self.after_cancel(self._animation_id)
+            self._animation_id = None
+
+    def _animate(self):
+        """Animira spinner."""
+        if not self._running:
+            return
+
+        self._frame_index = (self._frame_index + 1) % len(self.FRAMES)
+        self.spinner_label.configure(text=self.FRAMES[self._frame_index])
+        self._animation_id = self.after(80, self._animate)
+
+    def set_text(self, text: str):
+        """Mijenja tekst loadinga."""
+        self._text = text
+        self.text_label.configure(text=text)
+
+    def _on_theme_change(self, theme: Theme):
+        self._theme = theme
+        self.configure(bg=theme.bg_primary)
+        self.spinner_label.configure(bg=theme.bg_primary, fg=theme.accent)
+        self.text_label.configure(bg=theme.bg_primary, fg=theme.fg_primary)
+
+    def destroy(self):
+        self.stop()
+        ThemeManager.remove_listener(self._on_theme_change)
+        super().destroy()
+
+
+class EmptyState(tk.Frame):
+    """Prikaz kad nema podataka."""
+
+    def __init__(
+        self,
+        master,
+        icon: str = "📊",
+        title: str = "Nema podataka",
+        message: str = "Učitajte CSV datoteku ili generirajte nove podatke.",
+        **kwargs
+    ):
+        self._theme = ThemeManager.get_current()
+        super().__init__(master, bg=self._theme.bg_primary, **kwargs)
+
+        self._icon = icon
+        self._title = title
+        self._message = message
+
+        self._create_widgets()
+        ThemeManager.add_listener(self._on_theme_change)
+
+    def _create_widgets(self):
+        theme = self._theme
+
+        # Centar container
+        center = tk.Frame(self, bg=theme.bg_primary)
+        center.place(relx=0.5, rely=0.5, anchor="center")
+
+        # Ikona
+        self.icon_label = tk.Label(
+            center,
+            text=self._icon,
+            font=("Segoe UI", 48),
+            bg=theme.bg_primary
+        )
+        self.icon_label.pack(pady=(0, 10))
+
+        # Naslov
+        self.title_label = tk.Label(
+            center,
+            text=self._title,
+            font=("Segoe UI", 16, "bold"),
+            bg=theme.bg_primary,
+            fg=theme.fg_primary
+        )
+        self.title_label.pack(pady=(0, 5))
+
+        # Poruka
+        self.message_label = tk.Label(
+            center,
+            text=self._message,
+            font=("Segoe UI", 11),
+            bg=theme.bg_primary,
+            fg=theme.fg_muted
+        )
+        self.message_label.pack()
+
+        self._center = center
+
+    def _on_theme_change(self, theme: Theme):
+        self._theme = theme
+        self.configure(bg=theme.bg_primary)
+        self._center.configure(bg=theme.bg_primary)
+        self.icon_label.configure(bg=theme.bg_primary)
+        self.title_label.configure(bg=theme.bg_primary, fg=theme.fg_primary)
+        self.message_label.configure(bg=theme.bg_primary, fg=theme.fg_muted)
+
+    def destroy(self):
+        ThemeManager.remove_listener(self._on_theme_change)
+        super().destroy()
