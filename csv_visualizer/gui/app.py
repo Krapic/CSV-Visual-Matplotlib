@@ -381,6 +381,10 @@ class Application(tk.Tk):
 
     def _generate_data(self) -> bool:
         """Generira nove podatke."""
+        if hasattr(self, 'status_bar'):
+            self.status_bar.set_status("Generiram podatke...", "info")
+            self.update_idletasks()
+
         try:
             self.data = self.generator.generate_and_save()
             self._filtered_data = None
@@ -389,8 +393,15 @@ class Application(tk.Tk):
             self._search_query = ""
             self._update_stats()
             self._update_filter_terms()
+            self._update_status_bar()
+
+            if hasattr(self, 'status_bar'):
+                self.status_bar.set_status("Podaci uspješno generirani", "success")
+
             return True
         except (IOError, ValueError, RuntimeError) as e:
+            if hasattr(self, 'status_bar'):
+                self.status_bar.set_status("Greška pri generiranju", "error")
             messagebox.showerror("Greška", f"Greška pri generiranju:\n{e}")
             return False
 
@@ -426,11 +437,15 @@ class Application(tk.Tk):
             self.settings.save()
             self._update_stats()
             self._update_filter_terms()
+            self._update_status_bar()
 
             if self.view_mode.get() == "graph":
                 self._display_graph()
             else:
                 self._display_table()
+
+            if hasattr(self, 'status_bar'):
+                self.status_bar.set_status(f"Učitano {len(self.data)} zapisa", "success")
 
             messagebox.showinfo(
                 "Uspjeh",
@@ -438,10 +453,16 @@ class Application(tk.Tk):
             )
 
         except FileNotFoundError as e:
+            if hasattr(self, 'status_bar'):
+                self.status_bar.set_status("Datoteka nije pronađena", "error")
             messagebox.showerror("Greška", str(e))
         except DataValidationError as e:
+            if hasattr(self, 'status_bar'):
+                self.status_bar.set_status("Greška validacije podataka", "error")
             messagebox.showerror("Greška validacije", str(e))
         except Exception as e:
+            if hasattr(self, 'status_bar'):
+                self.status_bar.set_status("Neočekivana greška", "error")
             messagebox.showerror("Greška", f"Neočekivana greška:\n{e}")
 
     def _display_graph(self):
@@ -508,6 +529,8 @@ class Application(tk.Tk):
             self._filtered_data = None
         else:
             self._filtered_data = filtered
+
+        self._update_status_bar()
 
     def _on_filter(self, term: str | None, grade: int | None):
         """Handler za filtriranje po terminu/ocjeni."""
