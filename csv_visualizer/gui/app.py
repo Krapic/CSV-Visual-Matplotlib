@@ -17,6 +17,8 @@ from .widgets import (
     DataTable,
     SearchBar,
     FilterPanel,
+    StatusBar,
+    Tooltip,
 )
 
 
