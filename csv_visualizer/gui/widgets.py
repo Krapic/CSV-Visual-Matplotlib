@@ -3,8 +3,98 @@
 import tkinter as tk
 from tkinter import ttk
 from typing import Callable
+import platform
 
 from ..config import Theme, ThemeManager
+
+
+def get_mono_font() -> str:
+    """Vraća dostupan monospace font za sustav."""
+    system = platform.system()
+    if system == "Windows":
+        # Probaj moderne fontove prvo
+        preferred = ["Cascadia Code", "Consolas", "Courier New"]
+    elif system == "Darwin":  # macOS
+        preferred = ["SF Mono", "Menlo", "Monaco"]
+    else:  # Linux
+        preferred = ["JetBrains Mono", "Ubuntu Mono", "DejaVu Sans Mono", "Monospace"]
+
+    # Vrati prvi dostupan ili fallback
+    return preferred[0] if preferred else "TkFixedFont"
+
+
+MONO_FONT = get_mono_font()
+
+
+class Tooltip:
+    """Tooltip widget koji se prikazuje na hover."""
+
+    def __init__(self, widget: tk.Widget, text: str, delay: int = 500):
+        self.widget = widget
+        self.text = text
+        self.delay = delay
+        self.tooltip_window: tk.Toplevel | None = None
+        self._after_id: str | None = None
+
+        self.widget.bind("<Enter>", self._schedule_show)
+        self.widget.bind("<Leave>", self._hide)
+        self.widget.bind("<ButtonPress>", self._hide)
+
+    def _schedule_show(self, event=None):
+        """Zakazuje prikaz tooltipa nakon delay-a."""
+        self._cancel_scheduled()
+        self._after_id = self.widget.after(self.delay, self._show)
+
+    def _cancel_scheduled(self):
+        """Otkazuje zakazani prikaz."""
+        if self._after_id:
+            self.widget.after_cancel(self._after_id)
+            self._after_id = None
+
+    def _show(self):
+        """Prikazuje tooltip."""
+        if self.tooltip_window:
+            return
+
+        theme = ThemeManager.get_current()
+
+        x = self.widget.winfo_rootx() + 20
+        y = self.widget.winfo_rooty() + self.widget.winfo_height() + 5
+
+        self.tooltip_window = tk.Toplevel(self.widget)
+        self.tooltip_window.wm_overrideredirect(True)
+        self.tooltip_window.wm_geometry(f"+{x}+{y}")
+
+        # Stil tooltipa
+        frame = tk.Frame(
+            self.tooltip_window,
+            bg=theme.bg_tertiary,
+            highlightbackground=theme.border,
+            highlightthickness=1
+        )
+        frame.pack()
+
+        label = tk.Label(
+            frame,
+            text=self.text,
+            bg=theme.bg_tertiary,
+            fg=theme.fg_primary,
+            font=("Segoe UI", 9),
+            padx=8,
+            pady=4
+        )
+        label.pack()
+
+    def _hide(self, event=None):
+        """Skriva tooltip."""
+        self._cancel_scheduled()
+        if self.tooltip_window:
+            self.tooltip_window.destroy()
+            self.tooltip_window = None
+
+    def update_text(self, new_text: str):
+        """Ažurira tekst tooltipa."""
+        self.text = new_text
 
 
 class ThemedFrame(ttk.Frame):
