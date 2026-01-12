@@ -300,7 +300,9 @@ class GraphManager:
             passed = (group["ocjena"] >= 2).sum()
             return (passed / len(group)) * 100 if len(group) > 0 else 0.0
 
-        pass_rates = df.groupby("termin").apply(calc_pass_rate, include_groups=False).sort_index()
+        pass_rates = df.groupby("termin", group_keys=False).apply(
+            lambda g: calc_pass_rate(g)
+        ).sort_index()
 
         bars = ax.bar(
             pass_rates.index,
