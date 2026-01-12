@@ -1,77 +1,280 @@
-# Osnovna vizualizacija podataka (Matplotlib)
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11+-3776ab?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Matplotlib-3.7+-11557c?style=for-the-badge&logo=plotly&logoColor=white" alt="Matplotlib">
+  <img src="https://img.shields.io/badge/Pandas-2.0+-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas">
+  <img src="https://img.shields.io/badge/Tkinter-GUI-ff6f00?style=for-the-badge&logo=python&logoColor=white" alt="Tkinter">
+  <img src="https://img.shields.io/badge/Version-2.0.0-success?style=for-the-badge" alt="Version">
+</p>
 
-Kratak primjer projekta za kolegij "Osnovna vizualizacija podataka". Koristi se sintetički dataset studenata računarstva (godina studija, smjer, ocjene, ECTS, sati učenja) i nekoliko grafova izrađenih u Matplotlibu.
+<h1 align="center">📊 CSV Visualizer</h1>
 
-## Struktura
-- `main.py` – ulazna točka (CLI ili GUI).
-- `student_viz/` – paket s konfiguracijom, učitavanjem podataka, grafovima i pipelineom.
-  - `config.py` – putanje, teme.
-  - `data.py` – učitavanje i filtriranje.
-  - `plots.py` – sve Matplotlib vizualizacije.
-  - `pipeline.py` – primjena tema, KPI, pokretanje grafova.
-  - `gui_app.py` – Tkinter GUI.
-- `scripts/generate_dataset.py` – reproducibilno generira `data/students.csv` (ili drugu putanju).
-- `data/students.csv` – zadani primjer podataka (~180 redaka).
-- `data/students_alt1.csv`, `data/students_alt2.csv` – dodatni primjeri (različiti seedovi).
-- `requirements.txt` – ovisnosti (pandas, matplotlib, pillow).
+<p align="center">
+  <strong>🎓 Moderna desktop aplikacija za vizualizaciju rezultata ispita studenata</strong>
+</p>
 
-## Što je u podacima?
-Svaki redak predstavlja jednog studenta diplomskog studija (2 godine, max 120 ECTS):
-- `date` – referentni datum unosa (YYYY-MM-DD)
-- `student_id` – sintetički ID
-- `year` – godina studija (1–2)
-- `specialization` – smjer (`Programsko inž.`, `Računalni sustavi`)
-- `city` – grad prebivališta (`Zagreb`, `Split`, `Rijeka`)
-- `gender` – `M` ili `F`
-- `avg_grade` – prosječna ocjena (2.0–5.0)
-- `ects_completed` – ukupni položeni ECTS bodovi
-- `weekly_hours` – procjena sati tjedno na učenje/projekte
-- `attendance_rate` – prosječna prisutnost (0–1)
-- `scholarship` – 1 ako student ima stipendiju (u sintetičkim podacima definirano kombinacijom ocjene i prisutnosti)
+<p align="center">
+  <em>Jednostavno učitajte CSV, filtrirajte podatke i generirajte prekrasne grafove — sve u par klikova!</em>
+</p>
 
-## Brzi start
+---
+
+## ✨ Značajke
+
+<table>
+<tr>
+<td width="50%">
+
+### 🎨 Moderno sučelje
+- 🌙 **Dark/Light tema** — prilagodite izgled prema vlastitim preferencijama
+- 🖥️ **Responzivan dizajn** — prozor se prilagođava vašim potrebama
+- 🎯 **Intuitivne kontrole** — sve je na dohvat ruke
+
+</td>
+<td width="50%">
+
+### 📈 Napredna vizualizacija
+- 📊 **6 tipova grafova** — stupčasti, tortni, histogram, linijski, box plot...
+- 🎨 **Automatsko stiliziranje** — grafovi se prilagođavaju odabranoj temi
+- 💾 **Izvoz u više formata** — PNG, PDF, SVG, JPEG
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🔍 Filtriranje podataka
+- 🗓️ **Filter po terminu** — analizirajte pojedine ispitne rokove
+- 🎯 **Filter po ocjeni** — fokusirajte se na određene ocjene
+- 🔎 **Pretraga po imenu** — brzo pronađite studente
+
+</td>
+<td width="50%">
+
+### 📋 Statistika uživo
+- 📊 **Broj studenata** — ukupan broj zapisa
+- 📈 **Prosjek bodova/ocjena** — ključni pokazatelji
+- ✅ **Prolaznost** — postotak uspješnih studenata
+- 📉 **Min/Max/Medijan** — detaljna analiza
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🖼️ Tipovi grafova
+
+| Graf | Opis |
+|:----:|------|
+| 📊 **Broj studenata po ocjeni** | Stupčasti graf koji prikazuje distribuciju ocjena |
+| 🥧 **Udio ocjena** | Tortni dijagram s postotnim udjelima svake ocjene |
+| 📈 **Histogram bodova** | Distribucija bodova s označenim pragom prolaza i prosjekom |
+| 📉 **Prosjek bodova po terminu** | Linijski graf koji pokazuje trend kroz termine |
+| ✅ **Prolaznost po terminu** | Stupčasti graf prolaznosti s bojama prema uspješnosti |
+| 📦 **Box plot po terminu** | Statistička distribucija bodova za svaki termin |
+
+---
+
+## 🚀 Brzi početak
+
+### 📋 Preduvjeti
+
+- Python **3.11** ili noviji
+- pip (Python package manager)
+
+### ⚡ Instalacija
+
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+# 1️⃣ Klonirajte repozitorij
+git clone https://github.com/your-username/csv-visualizer.git
+cd csv-visualizer
+
+# 2️⃣ Kreirajte virtualno okruženje
+python -m venv .venv
+
+# 3️⃣ Aktivirajte virtualno okruženje
+# Windows:
+.venv\Scripts\activate
+# Linux/Mac:
+source .venv/bin/activate
+
+# 4️⃣ Instalirajte ovisnosti
 pip install -r requirements.txt
-
-# (po želji) regeneriraj dataset
-python3 scripts/generate_dataset.py           # novi random dataset svaki put
-# ili zadani seed / putanju radi reproducibilnosti:
-# python3 scripts/generate_dataset.py --seed 42 --output data/students.csv
-
-# pokreni GUI (default)
-python3 main.py
 ```
-Grafovi se spremaju u `figures/` (direktorij će se sam stvoriti).
 
-### GUI način (default)
-Pokreni samo `python3 main.py`. U GUI prozoru možeš:
-- odabrati CSV i izlazni direktorij,
-- filtrirati po smjeru, godini, gradu i “samo stipendisti” (prazan filter javlja grešku),
-- generirati grafove i vidjeti ih odmah u tabovima,
-- gledati KPI kartice (prosj. ocjena, prosj. ECTS, prosj. sati/tjedno, udio stipendija),
-- birati light/dark temu (primjenjuje se i na Matplotlib),
-- izvesti sve grafove u jedan PDF (`viz_report.pdf`),
-- izvesti filtrirani CSV i vidjeti Top 10 (poseban tab s tablicom),
-- pratiti status/progress i otvoriti direktorij s rezultatima,
-- svaki klik na “Generiraj grafove” regenerira default dataset kako bi grafovi bili različiti (ako koristiš `data/students.csv`).
+### ▶️ Pokretanje
 
-### CLI način (bez GUI)
 ```bash
-python3 main.py --cli --theme light --regen --specialization "Programsko inž." --year 2 --city Zagreb --scholarship-only
-# ili --theme dark; --regen pravi novi dataset ako je default
+python run.py
 ```
 
-## Što se vizualizira?
-- `01_grade_by_year.png` – prosječna ocjena po godini studija.
-- `02_ects_by_specialization.png` – prosječni ECTS po godini i smjeru (side-by-side bar, max 60 po godini).
-- `03_hours_vs_grade.png` – odnos tjednih sati i prosječne ocjene (raspršeni graf).
-- `04_scholarship_rate.png` – udio stipendista po smjeru (horizontalni bar s oznakama).
-- `05_grade_distribution.png` – distribucija prosječnih ocjena (histogram + Gauss KDE).
-- `06_attendance_vs_grade.png` – prisustvo vs. prosječna ocjena s trend linijom.
-- `07_gender_comparison.png` – usporedba prosjeka ocjena i udjela stipendija po spolu.
+🎉 **To je to!** Aplikacija će se otvoriti s automatski generiranim podacima.
 
-## Napomene
-- Dataset je sintetički, ali reproducibilan (možeš navesti seed); default GUI regenerira novi set pri svakom kliku radi različitih grafova.
-- Po potrebi mijenjaj stupce ili dodaj nove grafove u `main.py` — podaci se spremaju u `data/students.csv`, pa je lako eksperimentirati.
+---
+
+## 📁 Struktura projekta
+
+```
+csv_visualizer/
+├── 📂 config/
+│   ├── 🎨 themes.py      # Light/Dark teme
+│   └── ⚙️ settings.py    # Postavke aplikacije
+├── 📂 data/
+│   ├── 🏭 generator.py   # Generator sintetičkih podataka
+│   ├── 📥 loader.py      # Učitavanje CSV datoteka
+│   └── 📋 models.py      # Podatkovni modeli
+├── 📂 gui/
+│   ├── 🖥️ app.py         # Glavna aplikacija
+│   └── 🧩 widgets.py     # Custom widgeti (gumbi, paneli...)
+├── 📂 visualization/
+│   └── 📊 graphs.py      # Generiranje grafova
+└── 📂 utils/
+    └── 🔧 __init__.py    # Pomoćne funkcije
+```
+
+---
+
+## 📊 Format CSV datoteke
+
+Aplikacija očekuje CSV datoteku sa sljedećim stupcima:
+
+| Stupac | Tip | Opis |
+|--------|-----|------|
+| `student_id` | int | Jedinstveni identifikator studenta |
+| `ime` | string | Ime studenta |
+| `prezime` | string | Prezime studenta |
+| `termin` | string | Ispitni termin (npr. "Zimski", "Ljetni") |
+| `bodovi` | int | Broj ostvarenih bodova (0-100) |
+| `ocjena` | int | Ocjena (1-5) |
+
+### 📝 Primjer CSV datoteke
+
+```csv
+student_id,ime,prezime,termin,bodovi,ocjena
+1,Marko,Horvat,Zimski,85,4
+2,Ana,Kovač,Zimski,92,5
+3,Ivan,Babić,Ljetni,45,1
+4,Petra,Novak,Ljetni,67,3
+```
+
+---
+
+## 🎮 Kako koristiti
+
+### 1️⃣ Generiranje podataka
+Kliknite **🔄 Generiraj nove podatke** za automatsko kreiranje sintetičkih podataka za testiranje.
+
+### 2️⃣ Učitavanje vlastite datoteke
+Kliknite **📂 Učitaj CSV datoteku** i odaberite vašu CSV datoteku s podacima ispita.
+
+### 3️⃣ Odabir grafa
+Iz padajućeg izbornika odaberite željeni tip vizualizacije.
+
+### 4️⃣ Filtriranje (opcionalno)
+- Prebacite na **📋 Tablica** prikaz
+- Koristite filtere za termin i ocjenu
+- Pretražujte studente po imenu
+
+### 5️⃣ Izvoz rezultata
+- **💾 Spremi graf kao sliku** — PNG, PDF, SVG ili JPEG
+- **📤 Izvezi podatke** — CSV ili Excel format
+
+---
+
+## 🌙 Teme
+
+Aplikacija podržava dvije teme koje možete mijenjati u bilo kojem trenutku:
+
+<table>
+<tr>
+<td align="center" width="50%">
+
+### ☀️ Light tema
+Svijetla tema idealna za dnevni rad s visokim kontrastom i čitljivošću.
+
+</td>
+<td align="center" width="50%">
+
+### 🌙 Dark tema
+Tamna tema koja smanjuje naprezanje očiju i štedi bateriju na OLED ekranima.
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🛠️ Tehnologije
+
+<table>
+<tr>
+<td align="center" width="25%">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" width="48" height="48" alt="Python">
+<br><strong>Python 3.11+</strong>
+<br><sub>Programski jezik</sub>
+</td>
+<td align="center" width="25%">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/pandas/pandas-original.svg" width="48" height="48" alt="Pandas">
+<br><strong>Pandas</strong>
+<br><sub>Obrada podataka</sub>
+</td>
+<td align="center" width="25%">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/matplotlib/matplotlib-original.svg" width="48" height="48" alt="Matplotlib">
+<br><strong>Matplotlib</strong>
+<br><sub>Vizualizacija</sub>
+</td>
+<td align="center" width="25%">
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/numpy/numpy-original.svg" width="48" height="48" alt="NumPy">
+<br><strong>NumPy</strong>
+<br><sub>Numeričke operacije</sub>
+</td>
+</tr>
+</table>
+
+---
+
+## 📦 Ovisnosti
+
+```txt
+pandas>=2.0.0      # Manipulacija podacima
+numpy>=1.24.0      # Numeričke operacije
+matplotlib>=3.7.0  # Generiranje grafova
+pillow>=9.0.0      # Obrada slika
+```
+
+---
+
+## 🤝 Doprinos projektu
+
+Doprinosi su dobrodošli! 🎉
+
+1. 🍴 Forkajte repozitorij
+2. 🌿 Kreirajte feature branch (`git checkout -b feature/AmazingFeature`)
+3. 💾 Commitajte promjene (`git commit -m 'Add some AmazingFeature'`)
+4. 📤 Pushajte branch (`git push origin feature/AmazingFeature`)
+5. 🔃 Otvorite Pull Request
+
+---
+
+## 📄 Licenca
+
+Ovaj projekt je izrađen u sklopu kolegija **Programiranje u skriptnim jezicima** na Fakultetu informatike i digitalnih tehnologija.
+
+---
+
+## 👨‍💻 Autor
+
+<p align="center">
+  Izrađeno s ❤️ za akademske svrhe
+</p>
+
+---
+
+<p align="center">
+  <strong>⭐ Ako vam se sviđa projekt, ostavite zvjezdicu! ⭐</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?style=flat-square" alt="Made with Python">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome">
+</p>
