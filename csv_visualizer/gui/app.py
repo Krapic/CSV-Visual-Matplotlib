@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
+from .. import __version__
 from ..config import Theme, ThemeManager, get_settings
 from ..data import DataGenerator, DataLoader, ExamData
 from ..data.loader import DataValidationError
@@ -65,7 +66,7 @@ class Application(tk.Tk):
 
     def _setup_window(self):
         """Postavlja prozor."""
-        self.title("CSV Visualizer - Vizualizacija rezultata ispita")
+        self.title(f"CSV Visualizer v{__version__} - Vizualizacija rezultata ispita")
         self.geometry(f"{self.settings.window_width}x{self.settings.window_height}")
         self.minsize(self.settings.min_width, self.settings.min_height)
         self.configure(bg=self._theme.bg_primary)
