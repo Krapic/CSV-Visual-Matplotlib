@@ -1,5 +1,6 @@
 student_id,ime,prezime,termin,bodovi,ocjena
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 1,Andrija,Petrović,2025-01,31,1
 2,Katarina,Babić,2025-06,73,3
 3,Jakov,Blažević,2025-06,65,3
@@ -101,4 +102,56 @@ student_id,ime,prezime,termin,bodovi,ocjena
 48,Ivana,Kovač,2025-09,52,2
 49,Nikolina,Vidović,2025-06,80,4
 50,Nikolina,Jurić,2025-09,29,1
+>>>>>>> Stashed changes
+=======
+1,Ana,Horvat,2025-09,58,2
+2,Marin,Tadić,2025-02,92,5
+3,Domagoj,Filipović,2025-06,13,1
+4,Petra,Knežević,2025-06,89,4
+5,Andrija,Tomić,2025-09,62,2
+6,Marija,Matić,2025-02,81,4
+7,Gabriela,Blažević,2025-01,84,4
+8,Karlo,Radić,2025-09,28,1
+9,Borna,Petrović,2025-09,90,5
+10,Nikola,Šimić,2025-06,64,2
+11,Roko,Kovačević,2025-09,65,3
+12,Marko,Babić,2025-06,92,5
+13,Filip,Božić,2025-01,19,1
+14,Petra,Matić,2025-02,15,1
+15,Gabriela,Lončar,2025-01,43,1
+16,Nikola,Lončar,2025-06,65,3
+17,Bruno,Pavić,2025-01,59,2
+18,Marija,Tadić,2025-02,14,1
+19,Nikola,Vuković,2025-02,81,4
+20,Josip,Babić,2025-01,15,1
+21,Tea,Blažević,2025-06,91,5
+22,Ante,Klarić,2025-02,50,2
+23,Maja,Vidović,2025-06,25,1
+24,Mia,Perić,2025-01,96,5
+25,Valentina,Nikolić,2025-01,97,5
+26,Ivana,Novak,2025-06,79,3
+27,Lara,Šimić,2025-02,74,3
+28,Marin,Klarić,2025-02,95,5
+29,Matija,Klarić,2025-01,92,5
+30,Tomislav,Jurić,2025-06,73,3
+31,Helena,Tomić,2025-02,27,1
+32,Josip,Novak,2025-01,34,1
+33,Helena,Matić,2025-09,24,1
+34,Lovro,Horvat,2025-02,8,1
+35,Matija,Nikolić,2025-06,79,3
+36,Domagoj,Lovrić,2025-02,85,4
+37,Domagoj,Šimić,2025-01,83,4
+38,Lovro,Vuković,2025-06,60,2
+39,Tomislav,Nikolić,2025-02,66,3
+40,Katarina,Tadić,2025-01,87,4
+41,Klara,Lovrić,2025-09,92,5
+42,Lovro,Filipović,2025-01,37,1
+43,Nika,Šimić,2025-09,41,1
+44,Maja,Knežević,2025-02,94,5
+45,Petra,Perić,2025-09,71,3
+46,Maja,Tadić,2025-02,82,4
+47,Nikola,Nikolić,2025-09,84,4
+48,Roko,Perić,2025-01,90,5
+49,Sara,Klarić,2025-02,95,5
+50,Lucija,Tomić,2025-09,85,4
 >>>>>>> Stashed changes
