@@ -147,6 +147,12 @@ class Application(tk.Tk):
         # Desni panel (graf/tablica)
         self._create_right_panel(content)
 
+        # Status bar
+        self._create_status_bar()
+
+        # Keyboard shortcuts
+        self._setup_shortcuts()
+
     def _create_header(self):
         """Kreira header s naslovom i theme toggleom."""
         theme = self._theme
@@ -655,6 +661,53 @@ class Application(tk.Tk):
         # Ponovno prikaži graf s novom temom
         if self.view_mode.get() == "graph" and self.data:
             self._display_graph()
+
+    def _create_status_bar(self):
+        """Kreira status bar na dnu prozora."""
+        self.status_bar = StatusBar(self)
+        self.status_bar.pack(side=tk.BOTTOM, fill=tk.X)
+
+    def _setup_shortcuts(self):
+        """Postavlja keyboard shortcuts."""
+        # Ctrl+G - Generiraj podatke
+        self.bind("<Control-g>", lambda e: self._generate_and_display())
+
+        # Ctrl+O - Učitaj CSV
+        self.bind("<Control-o>", lambda e: self._load_csv())
+
+        # Ctrl+S - Spremi graf
+        self.bind("<Control-s>", lambda e: self._save_graph())
+
+        # Ctrl+E - Izvezi podatke
+        self.bind("<Control-e>", lambda e: self._export_data())
+
+        # Ctrl+T - Promijeni temu
+        self.bind("<Control-t>", lambda e: ThemeManager.toggle())
+
+        # F5 - Refresh (generiraj nove podatke)
+        self.bind("<F5>", lambda e: self._generate_and_display())
+
+        # Ctrl+1 do Ctrl+6 - Brzi odabir grafa
+        for i in range(6):
+            self.bind(f"<Control-Key-{i+1}>", lambda e, idx=i: self._select_graph(idx))
+
+    def _select_graph(self, index: int):
+        """Odabire graf po indeksu."""
+        graphs = GraphManager.get_available_graphs()
+        if 0 <= index < len(graphs):
+            self.current_graph.set(graphs[index])
+            self._display_graph()
+
+    def _update_status_bar(self):
+        """Ažurira status bar s informacijama o podacima."""
+        data = self._filtered_data or self.data
+        if data and hasattr(self, 'status_bar'):
+            count = len(data)
+            if self._filtered_data and self.data:
+                total = len(self.data)
+                self.status_bar.set_info(f"Prikazano {count} od {total} zapisa")
+            else:
+                self.status_bar.set_info(f"Ukupno {count} zapisa")
 
     def destroy(self):
         """Čisti resurse pri zatvaranju."""
