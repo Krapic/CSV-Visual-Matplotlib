@@ -85,14 +85,14 @@
 ### ⚡ Instalacija
 
 ```bash
-# 1️⃣ Klonirajte repozitorij
-git clone https://github.com/your-username/csv-visualizer.git
+1️⃣ Klonirajte repozitorij
+git clone https://github.com/Krapic/csv-visualizer.git
 cd csv-visualizer
 
-# 2️⃣ Kreirajte virtualno okruženje
+2️⃣ Kreirajte virtualno okruženje
 python -m venv .venv
 
-# 3️⃣ Aktivirajte virtualno okruženje
+3️⃣ Aktivirajte virtualno okruženje
 # Windows:
 .venv\Scripts\activate
 # Linux/Mac:
@@ -258,14 +258,14 @@ Doprinosi su dobrodošli! 🎉
 
 ## 📄 Licenca
 
-Ovaj projekt je izrađen u sklopu kolegija **Programiranje u skriptnim jezicima** na Fakultetu informatike i digitalnih tehnologija.
+Ovaj projekt je izrađen u sklopu kolegija **Programiranje skriptni jezici** na Tehničkom fakultetu u Rijeci.
 
 ---
 
 ## 👨‍💻 Autor
 
 <p align="center">
-  Izrađeno s ❤️ za akademske svrhe
+Frane Krapić
 </p>
 
 ---
