@@ -181,6 +181,7 @@ class Application(tk.Tk):
         # Desna strana - theme toggle
         self.theme_toggle = ThemeToggle(self.header_frame)
         self.theme_toggle.pack(side=tk.RIGHT, padx=10)
+        Tooltip(self.theme_toggle, "Promijeni temu (Ctrl+T)")
 
     def _create_left_panel(self, parent):
         """Kreira lijevi panel s kontrolama."""
@@ -270,6 +271,7 @@ class Application(tk.Tk):
             primary=True
         )
         self.btn_generate.pack(fill=tk.X, pady=(0, 8))
+        Tooltip(self.btn_generate, "Generiraj nove sintetičke podatke (Ctrl+G)")
 
         self.btn_load = ModernButton(
             action_section,
@@ -277,6 +279,7 @@ class Application(tk.Tk):
             command=self._load_csv
         )
         self.btn_load.pack(fill=tk.X, pady=(0, 8))
+        Tooltip(self.btn_load, "Učitaj postojeću CSV datoteku (Ctrl+O)")
 
         self.btn_save = ModernButton(
             action_section,
@@ -284,6 +287,7 @@ class Application(tk.Tk):
             command=self._save_graph
         )
         self.btn_save.pack(fill=tk.X, pady=(0, 8))
+        Tooltip(self.btn_save, "Spremi trenutni graf kao sliku (Ctrl+S)")
 
         self.btn_export = ModernButton(
             action_section,
@@ -291,6 +295,7 @@ class Application(tk.Tk):
             command=self._export_data
         )
         self.btn_export.pack(fill=tk.X)
+        Tooltip(self.btn_export, "Izvezi podatke u CSV ili Excel format (Ctrl+E)")
 
         # === Statistika ===
         stats_section = tk.Frame(inner, bg=theme.bg_secondary)
