@@ -86,7 +86,7 @@
 
 ```bash
 # 1️⃣ Klonirajte repozitorij
-git clone https://github.com/your-username/csv-visualizer.git
+git clone https://github.com/Krapic/csv-visualizer.git
 cd csv-visualizer
 
 # 2️⃣ Kreirajte virtualno okruženje
@@ -258,14 +258,14 @@ Doprinosi su dobrodošli! 🎉
 
 ## 📄 Licenca
 
-Ovaj projekt je izrađen u sklopu kolegija **Programiranje u skriptnim jezicima** na Fakultetu informatike i digitalnih tehnologija.
+Ovaj projekt je izrađen u sklopu kolegija **Programiranje skriptni jezici** na Tehničkom fakultetu u Rijeci.
 
 ---
 
 ## 👨‍💻 Autor
 
 <p align="center">
-  Izrađeno s ❤️ za akademske svrhe
+Frane Krapić
 </p>
 
 ---
