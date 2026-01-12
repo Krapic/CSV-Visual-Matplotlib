@@ -85,14 +85,14 @@
 ### ⚡ Instalacija
 
 ```bash
-# 1️⃣ Klonirajte repozitorij
+1️⃣ Klonirajte repozitorij
 git clone https://github.com/Krapic/csv-visualizer.git
 cd csv-visualizer
 
-# 2️⃣ Kreirajte virtualno okruženje
+2️⃣ Kreirajte virtualno okruženje
 python -m venv .venv
 
-# 3️⃣ Aktivirajte virtualno okruženje
+3️⃣ Aktivirajte virtualno okruženje
 # Windows:
 .venv\Scripts\activate
 # Linux/Mac:
